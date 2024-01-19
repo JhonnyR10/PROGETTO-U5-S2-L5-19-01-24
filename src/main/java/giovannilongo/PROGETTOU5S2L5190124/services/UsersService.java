@@ -1,5 +1,7 @@
 package giovannilongo.PROGETTOU5S2L5190124.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import giovannilongo.PROGETTOU5S2L5190124.entities.User;
 import giovannilongo.PROGETTOU5S2L5190124.exceptions.BadRequestException;
 import giovannilongo.PROGETTOU5S2L5190124.exceptions.NotFoundException;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -18,7 +21,8 @@ import java.io.IOException;
 public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
-
+    @Autowired
+    private Cloudinary cloudinaryUploader;
 
     public User save(NewUserDTO body) throws IOException {
         usersRepository.findByEmail(body.email()).ifPresent(user -> {
@@ -57,6 +61,13 @@ public class UsersService {
         found.setFirstName(body.getFirstName());
         found.setLastName(body.getLastName());
         found.setAvatar(body.getAvatar());
+        return usersRepository.save(found);
+    }
+
+    public User uploadAvatar(long id, MultipartFile file) throws IOException {
+        User found = this.findById(id);
+        String avatarURL = (String) cloudinaryUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        found.setAvatar(avatarURL);
         return usersRepository.save(found);
     }
 }
