@@ -4,6 +4,7 @@ import giovannilongo.PROGETTOU5S2L5190124.entities.User;
 import giovannilongo.PROGETTOU5S2L5190124.exceptions.BadRequestException;
 import giovannilongo.PROGETTOU5S2L5190124.payloads.NewUserDTO;
 import giovannilongo.PROGETTOU5S2L5190124.payloads.NewUserResponseDTO;
+import giovannilongo.PROGETTOU5S2L5190124.services.DevicesService;
 import giovannilongo.PROGETTOU5S2L5190124.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,8 @@ import java.io.IOException;
 public class UsersController {
     @Autowired
     UsersService usersService;
+    @Autowired
+    DevicesService devicesService;
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
@@ -61,4 +64,6 @@ public class UsersController {
             throw new RuntimeException(e);
         }
     }
+
+
 }

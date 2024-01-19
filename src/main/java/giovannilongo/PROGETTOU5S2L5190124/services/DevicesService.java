@@ -39,7 +39,7 @@ public class DevicesService {
         devicesRepository.delete(found);
     }
 
-    public Device findByIdAndUpdate(int id, NewDeviceDTO body) {
+    public Device findByIdAndUpdate(long id, NewDeviceDTO body) {
         Device found = this.findById(id);
         found.setType(body.type());
         found.setStatus(body.status());
@@ -50,8 +50,20 @@ public class DevicesService {
         return devicesRepository.save(found);
     }
 
-    public List<Device> findByAuthor(long user_id) {
+    public List<Device> findByUser(long user_id) {
         User user = usersService.findById(user_id);
         return devicesRepository.findByUser(user);
     }
+
+//    public Device addDeviceToUser(long userId, long deviceId) {
+//        User user = usersService.findById(userId);
+//        Device found = this.findById(deviceId);
+//        if (found.getUser() != null) {
+//            throw new BadRequestException("Il dispositivo è già assegnato a un altro utente");
+//        }
+//
+//        user.addDeviceById(found);
+//        usersService.save(user);
+//        return found;
+//    }
 }

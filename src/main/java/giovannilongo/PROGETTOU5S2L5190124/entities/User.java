@@ -1,10 +1,12 @@
 package giovannilongo.PROGETTOU5S2L5190124.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,7 +24,16 @@ public class User {
     private String email;
     private String avatar;
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Device> devices;
+
+    public void addDeviceById(Device device) {
+        if (devices == null) {
+            devices = new ArrayList<>();
+        }
+        devices.add(device);
+        device.setUser(this);
+    }
 
     @Override
     public String toString() {
