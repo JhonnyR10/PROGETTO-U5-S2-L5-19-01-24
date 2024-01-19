@@ -1,6 +1,8 @@
 package giovannilongo.PROGETTOU5S2L5190124.services;
 
 import giovannilongo.PROGETTOU5S2L5190124.entities.User;
+import giovannilongo.PROGETTOU5S2L5190124.exceptions.BadRequestException;
+import giovannilongo.PROGETTOU5S2L5190124.exceptions.NotFoundException;
 import giovannilongo.PROGETTOU5S2L5190124.payloads.NewUserDTO;
 import giovannilongo.PROGETTOU5S2L5190124.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,16 +40,16 @@ public class UsersService {
         return usersRepository.findAll(pageable);
     }
 
-    public User findById(int id) {
-        return UsersRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+    public User findById(long id) {
+        return usersRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
-    public void findByIdAndDelete(int id) {
+    public void findByIdAndDelete(long id) {
         User found = this.findById(id);
-        UsersRepository.delete(found);
+        usersRepository.delete(found);
     }
 
-    public User findByIdAndUpdate(int id, User body) {
+    public User findByIdAndUpdate(long id, User body) {
 
         User found = this.findById(id);
         found.setEmail(body.getEmail());
