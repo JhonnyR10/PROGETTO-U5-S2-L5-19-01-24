@@ -47,13 +47,13 @@ public class UsersController {
         return usersService.findByIdAndUpdate(userId, body);
     }
 
-    @DeleteMapping("/{authorId}")
+    @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findAndDelete(@PathVariable long userId) {
         usersService.findByIdAndDelete(userId);
     }
 
-    @PatchMapping("/{authorId}/avatar")
+    @PatchMapping("/{userId}/avatar")
     public User uploadAvatar(@RequestParam("avatar") MultipartFile file, @PathVariable long userId) {
         try {
             return usersService.uploadAvatar(userId, file);

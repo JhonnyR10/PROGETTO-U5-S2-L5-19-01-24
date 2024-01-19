@@ -1,0 +1,57 @@
+package giovannilongo.PROGETTOU5S2L5190124.services;
+
+import giovannilongo.PROGETTOU5S2L5190124.entities.Device;
+import giovannilongo.PROGETTOU5S2L5190124.entities.User;
+import giovannilongo.PROGETTOU5S2L5190124.exceptions.NotFoundException;
+import giovannilongo.PROGETTOU5S2L5190124.payloads.NewDeviceDTO;
+import giovannilongo.PROGETTOU5S2L5190124.repositories.DevicesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class DevicesService {
+    @Autowired
+    private DevicesRepository devicesRepository;
+    @Autowired
+    private UsersService usersService;
+
+    public Device save(NewDeviceDTO body) {
+        User user = usersService.findById(body.user_Id());
+        Device newDevice = new Device();
+        newDevice.setType(body.type());
+        newDevice.setStatus(body.status());
+        newDevice.setUser(user);
+        return devicesRepository.save(newDevice);
+    }
+
+    public List<Device> getDevice() {
+        return devicesRepository.findAll();
+    }
+
+    public Device findById(long id) {
+        return devicesRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+    }
+
+    public void findByIdAndDelete(long id) {
+        Device found = this.findById(id);
+        devicesRepository.delete(found);
+    }
+
+    public Device findByIdAndUpdate(int id, NewDeviceDTO body) {
+        Device found = this.findById(id);
+        found.setType(body.type());
+        found.setStatus(body.status());
+        if (found.getUser().getId() != body.user_Id()) {
+            User newUser = usersService.findById(body.user_Id());
+            found.setUser(newUser);
+        }
+        return devicesRepository.save(found);
+    }
+
+    public List<Device> findByAuthor(long user_id) {
+        User user = usersService.findById(user_id);
+        return devicesRepository.findByUser(user);
+    }
+}
